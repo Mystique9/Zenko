@@ -31,6 +31,44 @@ api:
   tolerations: []
   affinity: {}
 
+lifecycle:
+  conductor:
+    cronRule: "0 */5 * * * *"
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+  consumer:
+    replicaCount: 1
+    group: backbeat-lifecycle-consumer-group
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+  producer:
+    replicaCount: 1
+    group: backbeat-lifecycle-producer-group
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+  zookeeper:
+    path: "/lifecycle"
+    backlog_metrics:
+      path: "/lifecycle/run/backlog-metrics"
+      interval: 60
+
+  rules:
+    expiration:
+      enabled: True
+    noncurrentVersionExpiration:
+      enabled: True
+    abortIncompleteMPU:
+      enabled: True
+
 replication:
   consumer:
     replicaCount: 1
