@@ -9,6 +9,10 @@ image:
   tag: 0.2.1
   pullPolicy: IfNotPresent
 
+logging:
+   # Options: info, debug, trace
+   level: info
+
 api:
   replicaCount: 1
   service:

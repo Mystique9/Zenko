@@ -28,9 +28,17 @@ spec:
               value: "{{- printf "%s-zenko-quorum:2181" .Release.Name | trunc 63 | trimSuffix "-" -}}"
             - name: KAFKA_HOSTS
               value: "{{- printf "%s-zenko-queue:9092" .Release.Name .Release.Name | trunc 63 | trimSuffix "-" -}}"
-            - name: AUTH_TYPE
+            - name: MONGODB_HOSTS
+              value: "{{ .Release.Name }}-mongodb-replicaset-0.{{ .Release.Name }}-mongodb-replicaset:27017,{{ .Release.Name }}-mongodb-replicaset-1.{{ .Release.Name }}-mongodb-replicaset:27017,{{ .Release.Name }}-mongodb-replicaset-2.{{ .Release.Name }}-mongodb-replicaset:27017"
+            - name: S3_HOST
+              value: "{{- printf "%s-cloudserver-front" .Release.Name | trunc 63 | trimSuffix "-" -}}"
+            - name: S3_PORT
+              value: "80"
+            - name: LOG_LEVEL
+              value: {{ .Values.logging.level }}
+            - name: EXTENSIONS_LIFECYCLE_AUTH_TYPE
               value: service
-            - name: AUTH_ACCOUNT
+            - name: EXTENSIONS_LIFECYCLE_AUTH_ACCOUNT
               value: service-lifecycle
             - name: EXTENSIONS_LIFECYCLE_ZOOKEEPER_PATH
               value: "{{ .Values.lifecycle.zookeeper.path }}"
@@ -39,9 +47,9 @@ spec:
             - name: EXTENSIONS_LIFECYCLE_BACKLOG_METRICS_INTERVALS
               value: "{{ .Values.lifecycle.zookeeper.backlog_metrics.interval }}"
             - name: EXTENSIONS_LIFECYCLE_BUCKET_TASK_TOPIC
-              value: "{{ .Values.lifecycle.kafka.bucket_task_topic }}"
+              value: backbeat-lifecycle-bucket-tasks
             - name: EXTENSIONS_LIFECYCLE_OBJECT_TASK_TOPIC
-              value: "{{ .Values.lifecycle.kafka.object_task_topic }}"
+              value: backbeat-lifecycle-object-tasks
             - name: EXTENSIONS_LIFECYCLE_PRODUCER_GROUP_ID
               value: "{{ .Values.lifecycle.producer.group }}"
             - name: EXTENSIONS_LIFECYCLE_RULES_EXPIRATION_ENABLED
