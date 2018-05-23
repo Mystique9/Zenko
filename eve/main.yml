@@ -39,9 +39,18 @@ stages:
         env:
           TILLER_NAMESPACE: '%(prop:testNamespace)s'
     - ShellCommand:
-        name: Install needed repo
-        command: >
+        name: Install needed helm repos
+        command: |-
           helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
+          helm repo add orbit-simulator https://raw.githubusercontent.com/tmacro/orbit-simulator/master/
+        haltOnFailure: true
+        env:
+          TILLER_NAMESPACE: '%(prop:testNamespace)s'
+    - ShellCommand:
+        name: Start orbit simulator
+        command: >-
+          sh start_orbit_sim.sh
+        workdir: build/eve/workers
         haltOnFailure: true
         env:
           TILLER_NAMESPACE: '%(prop:testNamespace)s'
