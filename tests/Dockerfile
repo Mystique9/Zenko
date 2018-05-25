@@ -6,6 +6,6 @@ RUN pip install -r /tmp/requirements.txt
 ADD . /usr/src/zenko-e2e
 WORKDIR /usr/src/zenko-e2e
 
-USER nobody:nogroup
+# USER nobody:nogroup
 
 ENTRYPOINT ["./docker-entrypoint.sh"]

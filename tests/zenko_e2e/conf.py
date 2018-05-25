@@ -1,6 +1,7 @@
 import os
 from datetime import timedelta
 import requests
+import socket
 
 def get_env(key, default = None, error = False):
 	if not error:
@@ -32,6 +33,21 @@ ZENKO_GCP_ENDPOINT = get_env('ZENKO_GCP_ENDPOINT',  'http://gcp.%s'%ZENKO_ROOT_E
 ZENKO_AZURE_ENDPOINT =  get_env('ZENKO_AZURE_ENDPOINT', 'http://azure.%s'%ZENKO_ROOT_ENDPOINT)
 ZENKO_WASABI_ENDPOINT = get_env('ZRNKO_WASABI_ENDPOINT', 'http://wasabi.%s'%ZENKO_ROOT_ENDPOINT)
 ZENKO_DO_ENDPOINT = get_env('ZENKO_DO_ENDPOINT', 'http://do.%s'%ZENKO_ROOT_ENDPOINT)
+# Setup endpoints in hosts file
+
+try:
+    orbit_ip = socket.gethostbyname(ORBIT_ROOT_ENDPOINT)
+    with open('/etc/hosts', 'a') as hosts:
+        hosts.write('%s\t%s'%(orbit_ip, ' '.join([
+            ZENKO_AWS_ENDPOINT,
+            ZENKO_AZURE_ENDPOINT,
+            ZENKO_DO_ENDPOINT,
+            ZENKO_GCP_ENDPOINT,
+            ZENKO_WASABI_ENDPOINT
+        ])))
+except socket.gaierror as exc:
+    raise RuntimeError('Unable to resolve Orbit management endpoint')
+
 
 
 # Sets whether to verify ssl certicates of remote services
