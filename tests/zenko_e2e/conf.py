@@ -36,7 +36,7 @@ ZENKO_DO_ENDPOINT = get_env('ZENKO_DO_ENDPOINT', 'http://do.%s'%ZENKO_ROOT_ENDPO
 # Setup endpoints in hosts file
 
 try:
-    orbit_ip = socket.gethostbyname(ORBIT_ROOT_ENDPOINT)
+    orbit_ip = socket.gethostbyname(ORBIT_ENDPOINT.split('//')[1].split(':')[0])
     with open('/etc/hosts', 'a') as hosts:
         hosts.write('%s\t%s'%(orbit_ip, ' '.join([
             ZENKO_AWS_ENDPOINT,
