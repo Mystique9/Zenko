@@ -22,6 +22,7 @@ def test_gcp_storage(gcp_loc_bucket, gcp_target_bucket, testfile):
 		Key = 'gcp-test'
 	)
 	assert util.check_object('gcp-test', testfile, gcp_loc_bucket, gcp_target_bucket)
+
 @pytest.mark.skip(reason ='Not implemented in CI')
 def test_azure_storage(azure_loc_bucket, azure_target_bucket, testfile):
 	util.mark_test('AZURE STORAGE LOCATION CONSTRAINT')
@@ -30,6 +31,7 @@ def test_azure_storage(azure_loc_bucket, azure_target_bucket, testfile):
 		Key = 'azure-test'
 	)
 	assert util.check_object('azure-test', testfile, azure_loc_bucket, azure_target_bucket)
+
 @pytest.mark.skip(reason ='Not implemented in CI')
 def test_wasabi_storage(wasabi_loc_bucket, wasabi_target_bucket, testfile):
 	util.mark_test('WASABI STORAGE LOCATION CONSTRAINT')
@@ -38,7 +40,7 @@ def test_wasabi_storage(wasabi_loc_bucket, wasabi_target_bucket, testfile):
 		Key = 'wasabi-test'
 	)
 	assert util.check_object('wasabi-test', testfile, wasabi_loc_bucket, wasabi_target_bucket)
-@pytest.mark.skip(reason ='Not implemented in CI')
+
 @pytest.mark.skip(reason = 'Digital Ocean Spaces is super flakey causing this test to fail')
 def test_digital_ocean_storage(digital_ocean_loc_bucket, digital_ocean_target_bucket, testfile):
 	util.mark_test('DIGITAL OCEAN STORAGE LOCATION CONSTRAINT')

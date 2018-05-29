@@ -32,10 +32,11 @@ def test_set_get_metadata(empty_object, testfile):
 	for k, v in conf.METADATA_EXAMPLE.items():
 		assert k in resp['Metadata']
 		assert resp['Metadata'].get(k, None) == v
-@pytest.mark.skip(reason ='Not implemented in CI')
+
 def get_xml_namespace(el):
 	m = re.match('\{.*\}', el.tag)
 	return m.group(0) if m else ''
+
 @pytest.mark.skip(reason ='Not implemented in CI')
 def test_metadata_search(metadata_multi, s3auth):
 	util.mark_test('SEARCH METADATA')

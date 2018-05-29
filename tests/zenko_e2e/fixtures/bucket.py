@@ -166,118 +166,170 @@ def digital_ocean_loc_bucket(zenko_bucket):
 
 # These are bucket in zenko with replication enabled
 
-@pytest.fixture
-def aws_crr_bucket(vault, aws_replication_policy, crr_role):
-	bucket, policy = aws_replication_policy
-	bucket.create()
-	policy.attach_role(RoleName = crr_role.name)
-	bucket.Versioning().enable()
-	doc = util.format_json(conf.REPL_CONF_TPL,
-		role = crr_role.arn,
-		prefix = '',
-		dest = 'arn:aws:s3:::stuff',
-		backends = conf.AWS_CRR_BACKEND,
-		asString = False
-		)
-	bucket.meta.client.put_bucket_replication(
-		Bucket = bucket.name,
-		ReplicationConfiguration = doc
-		)
-	print(bucket.name)
-	yield bucket
+@pytest.fixture(scope = 'function')
+def aws_crr_bucket(zenko_resource):
+    bucket = create_bucket(zenko_resource, conf.AWS_CRR_SRC_BUCKET)
+    yield bucket
+    util.cleanup_bucket(bucket, delete_bucket = False)
 
-@pytest.fixture
-def gcp_crr_bucket(vault, gcp_replication_policy, crr_role):
-	bucket, policy = gcp_replication_policy
-	bucket.create()
-	policy.attach_role(RoleName = crr_role.name)
-	bucket.Versioning().enable()
-	doc = util.format_json(conf.REPL_CONF_TPL,
-		role = crr_role.arn,
-		prefix = '',
-		dest = 'arn:aws:s3:::stuff',
-		backends = conf.GCP_CRR_BACKEND,
-		asString = False
-		)
-	bucket.meta.client.put_bucket_replication(
-		Bucket = bucket.name,
-		ReplicationConfiguration = doc
-		)
-	return bucket
+@pytest.fixture(scope = 'function')
+def gcp_crr_bucket(zenko_resource):
+    bucket = create_bucket(zenko_resource, conf.GCP_CRR_SRC_BUCKET)
+    yield bucket
+    util.cleanup_bucket(bucket, delete_bucket = False)
 
-@pytest.fixture
-def azure_crr_bucket(vault, azure_replication_policy, crr_role):
-	bucket, policy = azure_replication_policy
-	bucket.create()
-	policy.attach_role(RoleName = crr_role.name)
-	bucket.Versioning().enable()
-	doc = util.format_json(conf.REPL_CONF_TPL,
-		role = crr_role.arn,
-		prefix = '',
-		dest = 'arn:aws:s3:::stuff',
-		backends = conf.AZURE_CRR_BACKEND,
-		asString = False
-		)
-	bucket.meta.client.put_bucket_replication(
-		Bucket = bucket.name,
-		ReplicationConfiguration = doc
-		)
-	return bucket
+@pytest.fixture(scope = 'function')
+def azure_crr_bucket(zenko_resource):
+    bucket = create_bucket(zenko_resource, conf.AZURE_CRR_SRC_BUCKET)
+    yield bucket
+    util.cleanup_bucket(bucket, delete_bucket = False)
 
-@pytest.fixture
-def wasabi_crr_bucket(vault, wasabi_replication_policy, crr_role):
-	bucket, policy = wasabi_replication_policy
-	bucket.create()
-	policy.attach_role(RoleName = crr_role.name)
-	bucket.Versioning().enable()
-	doc = util.format_json(conf.REPL_CONF_TPL,
-		role = crr_role.arn,
-		prefix = '',
-		dest = 'arn:aws:s3:::stuff',
-		backends = conf.WASABI_CRR_BACKEND,
-		asString = False
-		)
-	bucket.meta.client.put_bucket_replication(
-		Bucket = bucket.name,
-		ReplicationConfiguration = doc
-		)
-	return bucket
+@pytest.fixture(scope = 'function')
+def wasabi_crr_bucket(zenko_resource):
+    bucket = create_bucket(zenko_resource, conf.WASABI_CRR_SRC_BUCKET)
+    yield bucket
+    util.cleanup_bucket(bucket, delete_bucket = False)
 
-@pytest.fixture
-def digital_ocean_crr_bucket(vault, digital_ocean_replication_policy, crr_role):
-	bucket, policy = digital_ocean_replication_policy
-	bucket.create()
-	policy.attach_role(RoleName = crr_role.name)
-	bucket.Versioning().enable()
-	doc = util.format_json(conf.REPL_CONF_TPL,
-		role = crr_role.arn,
-		prefix = '',
-		dest = 'arn:aws:s3:::stuff',
-		backends = conf.DO_CRR_BACKEND,
-		asString = False
-		)
-	bucket.meta.client.put_bucket_replication(
-		Bucket = bucket.name,
-		ReplicationConfiguration = doc
-		)
-	return bucket
+@pytest.fixture(scope = 'function')
+def digital_ocean_crr_bucket(zenko_resource):
+    bucket = create_bucket(zenko_resource, conf.DO_CRR_SRC_BUCKET)
+    yield bucket
+    util.cleanup_bucket(bucket, delete_bucket = False)
 
-@pytest.fixture
-def multi_crr_bucket(vault, multi_replication_policy, crr_role):
-	bucket, policy = multi_replication_policy
-	bucket.create()
-	policy.attach_role(RoleName = crr_role.name)
-	bucket.Versioning().enable()
-	backends = ','.join([getattr(conf, '%s_CRR_BACKEND'%b) for b in conf.MULTI_CRR_TARGETS])
-	doc = util.format_json(conf.REPL_CONF_TPL,
-		role = crr_role.arn,
-		prefix = '',
-		dest = 'arn:aws:s3:::stuff',
-		backends = backends,
-		asString = False
-		)
-	bucket.meta.client.put_bucket_replication(
-		Bucket = bucket.name,
-		ReplicationConfiguration = doc
-		)
-	return bucket
+@pytest.fixture(scope = 'function')
+def muti_crr_bucket(zenko_resource):
+    bucket = create_bucket(zenko_resource, conf.MULTI_CRR_SRC_BUCKET)
+    yield bucket
+    util.cleanup_bucket(bucket, delete_bucket = False)
+
+
+	resp = requests.get(req1, auth=s3auth, verify = conf.VERIFY_CERTIFICATES)
+
+
+@pytest.fixture(scope = 'function')
+def encrypted_bucket(zenko_resource, s3auth):
+    name = util.gen_bucket_name()
+    ep = '%s/%s/'%(conf.ZENKO_ENDPOINT, name)
+    resp = request.put(ep, auth=s3auth, verify = conf.VERIFY_CERTIFICATES)
+    bucket = create_bucket(zenko_resource, name)
+    yield bucket
+    util.cleanup_bucket(bucket)
+
+
+
+
+# @pytest.fixture
+# def aws_crr_bucket(vault, aws_replication_policy, crr_role):
+# 	bucket, policy = aws_replication_policy
+# 	bucket.create()
+# 	policy.attach_role(RoleName = crr_role.name)
+# 	bucket.Versioning().enable()
+# 	doc = util.format_json(conf.REPL_CONF_TPL,
+# 		role = crr_role.arn,
+# 		prefix = '',
+# 		dest = 'arn:aws:s3:::stuff',
+# 		backends = conf.AWS_CRR_BACKEND,
+# 		asString = False
+# 		)
+# 	bucket.meta.client.put_bucket_replication(
+# 		Bucket = bucket.name,
+# 		ReplicationConfiguration = doc
+# 		)
+# 	print(bucket.name)
+# 	yield bucket
+
+# @pytest.fixture
+# def gcp_crr_bucket(vault, gcp_replication_policy, crr_role):
+# 	bucket, policy = gcp_replication_policy
+# 	bucket.create()
+# 	policy.attach_role(RoleName = crr_role.name)
+# 	bucket.Versioning().enable()
+# 	doc = util.format_json(conf.REPL_CONF_TPL,
+# 		role = crr_role.arn,
+# 		prefix = '',
+# 		dest = 'arn:aws:s3:::stuff',
+# 		backends = conf.GCP_CRR_BACKEND,
+# 		asString = False
+# 		)
+# 	bucket.meta.client.put_bucket_replication(
+# 		Bucket = bucket.name,
+# 		ReplicationConfiguration = doc
+# 		)
+# 	return bucket
+
+# @pytest.fixture
+# def azure_crr_bucket(vault, azure_replication_policy, crr_role):
+# 	bucket, policy = azure_replication_policy
+# 	bucket.create()
+# 	policy.attach_role(RoleName = crr_role.name)
+# 	bucket.Versioning().enable()
+# 	doc = util.format_json(conf.REPL_CONF_TPL,
+# 		role = crr_role.arn,
+# 		prefix = '',
+# 		dest = 'arn:aws:s3:::stuff',
+# 		backends = conf.AZURE_CRR_BACKEND,
+# 		asString = False
+# 		)
+# 	bucket.meta.client.put_bucket_replication(
+# 		Bucket = bucket.name,
+# 		ReplicationConfiguration = doc
+# 		)
+# 	return bucket
+
+# @pytest.fixture
+# def wasabi_crr_bucket(vault, wasabi_replication_policy, crr_role):
+# 	bucket, policy = wasabi_replication_policy
+# 	bucket.create()
+# 	policy.attach_role(RoleName = crr_role.name)
+# 	bucket.Versioning().enable()
+# 	doc = util.format_json(conf.REPL_CONF_TPL,
+# 		role = crr_role.arn,
+# 		prefix = '',
+# 		dest = 'arn:aws:s3:::stuff',
+# 		backends = conf.WASABI_CRR_BACKEND,
+# 		asString = False
+# 		)
+# 	bucket.meta.client.put_bucket_replication(
+# 		Bucket = bucket.name,
+# 		ReplicationConfiguration = doc
+# 		)
+# 	return bucket
+
+# @pytest.fixture
+# def digital_ocean_crr_bucket(vault, digital_ocean_replication_policy, crr_role):
+# 	bucket, policy = digital_ocean_replication_policy
+# 	bucket.create()
+# 	policy.attach_role(RoleName = crr_role.name)
+# 	bucket.Versioning().enable()
+# 	doc = util.format_json(conf.REPL_CONF_TPL,
+# 		role = crr_role.arn,
+# 		prefix = '',
+# 		dest = 'arn:aws:s3:::stuff',
+# 		backends = conf.DO_CRR_BACKEND,
+# 		asString = False
+# 		)
+# 	bucket.meta.client.put_bucket_replication(
+# 		Bucket = bucket.name,
+# 		ReplicationConfiguration = doc
+# 		)
+# 	return bucket
+
+# @pytest.fixture
+# def multi_crr_bucket(vault, multi_replication_policy, crr_role):
+# 	bucket, policy = multi_replication_policy
+# 	bucket.create()
+# 	policy.attach_role(RoleName = crr_role.name)
+# 	bucket.Versioning().enable()
+# 	backends = ','.join([getattr(conf, '%s_CRR_BACKEND'%b) for b in conf.MULTI_CRR_TARGETS])
+# 	doc = util.format_json(conf.REPL_CONF_TPL,
+# 		role = crr_role.arn,
+# 		prefix = '',
+# 		dest = 'arn:aws:s3:::stuff',
+# 		backends = backends,
+# 		asString = False
+# 		)
+# 	bucket.meta.client.put_bucket_replication(
+# 		Bucket = bucket.name,
+# 		ReplicationConfiguration = doc
+# 		)
+# 	return bucket
