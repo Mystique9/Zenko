@@ -9,6 +9,23 @@ models:
       source: artifacts
       urls:
         - "*"
+  - env: &global_env
+      AWS_S3_BUCKET_NAME: zenko-aws-target-bucket
+      AWS_S3_BUCKET_NAME_2: zenko-aws-target-bucket-2
+      AWS_S3_BACKBEAT_BUCKET_NAME: zenko-aws-crr-target-bucket
+      AWS_S3_BACKBEAT_SRC_BUCKET_NAME: zenko-aws-crr-src-bucket
+      AZURE_BACKEND_CONTAINER_NAME: zenko-azure-target-bucket
+      AZURE_BACKEND_CONTAINER_NAME_2: zenko-azure-target-bucket-2
+      AZURE_BACKBEAT_CONTAINER_NAME: zenko-azure-crr-target-bucket
+      AZURE_BACKBEAT_SRC_CONTAINER_NAME: zenko-azure-crr-src-bucket
+      GCP_BUCKET_NAME: zenko-gcp-target-bucket
+      GCP_MPU_BUCKET_NAME: zenko-gcp-mpu-bucket
+      GCP_BUCKET_NAME_2: zenko-gcp-target-bucket-2
+      GCP_MPU_BUCKET_NAME_2: zenko-gcp-mpu-bucket-2
+      GCP_CRR_BUCKET_NAME: zenko-gcp-crr-target-bucket
+      GCP_CRR_SRC_BUCKET_NAME: zenko-gcp-crr-src-bucket
+      GCP_CRR_MPU_BUCKET_NAME: zenko-gcp-crr-mpu-bucket
+      MULTI_CRR_SRC_BUCKET: zenko-multi-crr-src-bucket
 
 stages:
   pre-merge:

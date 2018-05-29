@@ -88,11 +88,19 @@ WASABI_TARGET_BUCKET = get_env('WASABI_TARGET_BUCKET', 'zenko-wasabi-target-buck
 DO_TARGET_BUCKET = get_env('DO_TARGET_BUCKET', 'zenko-digitalocean-target-bucket')
 
 # The target buckets configured for CR replication
-AWS_CRR_TARGET_BUCKET = get_env('AWS_S3_BUCKET_NAME_2', 'zenko-aws-crr-target-bucket')
+AWS_CRR_TARGET_BUCKET = get_env('AWS_S3_BACKBEAT_BUCKET_NAME', 'zenko-aws-crr-target-bucket')
 GCP_CRR_TARGET_BUCKET = get_env('GCP_CRR_BUCKET_NAME', 'zenko-gcp-crr-target-bucket')
-AZURE_CRR_TARGET_BUCKET = get_env('AZURE_BACKEND_CONTAINER_NAME_2', 'zenko-azure-crr-target-bucket')
+AZURE_CRR_TARGET_BUCKET = get_env('AZURE_BACKBEAT_CONTAINER_NAME', 'zenko-azure-crr-target-bucket')
 WASABI_CRR_TARGET_BUCKET = get_env('WASABI_TARGET_BUCKET', 'zenko-wasabi-crr-target-bucket')
 DO_CRR_TARGET_BUCKET = get_env('DO_TARGET_BUCKET', 'zenko-digitalocean-crr-target-bucket')
+
+AWS_CRR_SRC_BUCKET = get_env('AWS_S3_BACKBEAT_SRC_BUCKET_NAME', 'zenko-aws-crr-src-bucket')
+GCP_CRR_SRC_BUCKET = get_env('GCP_CRR_SRC_BUCKET_NAME', 'zenko-gcp-crr-src-bucket')
+AZURE_CRR_SRC_BUCKET = get_env('AZURE_BACKBEAT_SRC_CONTAINER_NAME', 'zenko-azure-crr-src-bucket')
+WASABI_CRR_SRC_BUCKET = get_env('WASABI_CRR_SRC_BUCKET', 'zenko-wasabi-crr-src-bucket')
+DO_CRR_SRC_BUCKET = get_env('DO_CRR_SRC_BUCKET', 'zenko-do-crr-src-bucket')
+MULTI_CRR_SRC_BUCKET = get_env('MULTI_CRR_SRC_BUCKET', 'zenko-multi-crr-src-bucket')
+
 
 BACKBEAT_METRICS_ENDPOINT = get_env('BACKBEAT_METRICS_ENDPOINT', 'https://zenko.test:')
 
