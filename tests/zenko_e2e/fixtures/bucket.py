@@ -207,11 +207,11 @@ def muti_crr_bucket(zenko_resource):
 
 
 @pytest.fixture(scope = 'function')
-def encrypted_bucket(zenko_resource, s3auth):
+def encrypted_bucket(aws_ep_resource, s3auth):
     name = util.gen_bucket_name()
     ep = '%s/%s/'%(conf.ZENKO_ENDPOINT, name)
     resp = request.put(ep, auth=s3auth, verify = conf.VERIFY_CERTIFICATES)
-    bucket = create_bucket(zenko_resource, name)
+    bucket = create_bucket(aws_ep_resource, name)
     yield bucket
     util.cleanup_bucket(bucket)
 
