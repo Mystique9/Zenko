@@ -98,3 +98,11 @@ replication:
     tolerations: []
     affinity: {}
     
+garbageCollector:
+  consumer:
+    replicaCount: 1
+
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
