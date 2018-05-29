@@ -76,6 +76,7 @@ stages:
         workdir: build/eve/workers
         haltOnFailure: true
         env:
+          <<: *global_env
           TILLER_NAMESPACE: '%(prop:testNamespace)s'
     - ShellCommand:
         name: Retrieve dependency
@@ -96,6 +97,7 @@ stages:
         haltOnFailure: true
         workdir: build/eve/workers
         env:
+          <<: *global_env
           TILLER_NAMESPACE: '%(prop:testNamespace)s'
     - ShellCommand:
         name: Test zenko
@@ -105,6 +107,7 @@ stages:
         workdir: build/tests
         haltOnFailure: true
         env:
+          <<: *global_env
           TILLER_NAMESPACE: '%(prop:testNamespace)s'
           ZENKO_K8S_NAMESPACE: '%(prop:testNamespace)s'
           ZENKO_HELM_RELEASE: 'zenko-test'
