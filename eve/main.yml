@@ -4,6 +4,12 @@ branches:
   default:
     stage: "pre-merge"
 
+models:
+  - Upload: &upload_artifacts
+    source: artifacts
+    urls:
+      - "*"
+
 stages:
   pre-merge:
     worker: &pod
@@ -85,3 +91,4 @@ stages:
           TILLER_NAMESPACE: '%(prop:testNamespace)s'
           ZENKO_K8S_NAMESPACE: '%(prop:testNamespace)s'
           ZENKO_HELM_RELEASE: 'zenko-test'
+    - Upload: *upload_artifacts
