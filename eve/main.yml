@@ -46,7 +46,7 @@ stages:
         haltOnFailure: true
         env:
           TILLER_NAMESPACE: '%(prop:testNamespace)s'
-    - ShellCommand:
+    - ShellCommandWithSecrets:
         name: Start orbit simulator
         command: >-
           sh start_orbit_simulator.sh
