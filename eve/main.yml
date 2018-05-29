@@ -49,10 +49,7 @@ stages:
     - ShellCommand:
         name: Start orbit simulator
         command: >-
-          echo "helm upgrade ciutil
-          --namespace %(prop:testNamespace)s
-          --install orbit-simulator/orbit-simulator
-          --wait $(./ci_env.sh orbit-simulator)"
+          sh start_orgit_simulator.sh
         workdir: build/eve/workers
         haltOnFailure: true
         env:
