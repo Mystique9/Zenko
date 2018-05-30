@@ -1,16 +1,17 @@
+-include local.make
 DOCKER_IMAGE_NAME := docker.io/zenko/zenko-e2e
 DOCKER_IMAGE_TAG := latest
 
 DOCKER := docker
 TOX := tox
 KUBECTL := kubectl
+HELM := helm
 
 DOCKER_IMAGE := $(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_TAG)
 
 DOCKER_ARGS :=
 PYTEST_ARGS :=
 DOTENV := $(PWD)/.env
-
 HELM_TEST_PODS := {range .items[?(@.metadata.annotations.helm\.sh\/hook)]}{@.metadata.name}{"\n"}{end}
 
 artifacts:
@@ -18,6 +19,24 @@ artifacts:
 
 requirements.txt: setup.cfg setup.py tox.ini
 	@env CUSTOM_COMPILE_COMMAND="$(MAKE) requirements.txt" $(TOX) -e pip-compile
+
+simulator-run:
+	@echo "Starting orbit-simulator..."
+	@$(HELM) install --name ciutil \
+	$(shell source $(DOTENV) && ../eve/workers/ci_env.sh simulator) \
+	orbit-simulator/orbit-simulator --wait
+.PHONY: simulator
+
+zenko-run: | simulator-run
+	@$(HELM) install --name $(ZENKO_HELM_RELEASE) \
+		$(shell source $(DOTENV) && ../eve/workers/ci_env.sh ci) \
+		--set prometheus.rbac.create=false \
+		--set zenko-queue.rbac.enabled=false \
+		--set redis-ha.rbac.create=false \
+		-f ../charts/single-node-values.yml \
+		../charts/zenko/
+.PHONY: zenko-run
+
 
 container-image:
 	@$(DOCKER) build -t $(DOCKER_IMAGE) .
@@ -56,7 +75,7 @@ kubernetes-run-conformance: kubernetes-run
 
 helm-test: | artifacts
 	@helm test $(ZENKO_HELM_RELEASE) || HELM_FAIL=1; \
-	(kubectl -n $(ZENKO_K8S_NAMESPACE) get pods -o jsonpath='$(HELM_TEST_PODS)') | \
+	(kubectl -n $(ZENKO_K8S_NAMESPACE) get pods) | \
 	while read -r pod; do \
 	  echo "$${pod} Logs:"; echo; \
 	  kubectl -n $(ZENKO_K8S_NAMESPACE) logs $${pod} | tee artifacts/$${pod}.log; \

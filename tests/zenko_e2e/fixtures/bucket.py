@@ -76,6 +76,7 @@ def digital_crr_ocean_bucket(digital_ocean_resource):
 @pytest.fixture(scope = 'function')
 def zenko_bucket(zenko_resource):
 	name = util.gen_bucket_name()
+	name.replace('"', '')
 	bucket = create_bucket(zenko_resource, name)
 	yield bucket
 	util.cleanup_bucket(bucket)
