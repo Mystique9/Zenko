@@ -18,10 +18,6 @@ spec:
         value: {{ .Release.Namespace | quote }}
       - name: ZENKO_HELM_RELEASE
         value: {{ .Release.Name | quote }}
-      - name: AWS_ACCESS_KEY_ID
-        value: {{ index .Values "cloudserver-front" "credentials" "keyId" }}
-      - name: AWS_SECRET_ACCESS_KEY
-        value: {{ index .Values "cloudserver-front" "credentials" "secretKey" }}
       - name: NUM_CPUS
         valueFrom:
           resourceFieldRef:
