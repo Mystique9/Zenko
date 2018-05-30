@@ -106,7 +106,7 @@ stages:
           sleep 90
           make helm-test
         workdir: build/tests
-        haltOnFailure: true
+        # haltOnFailure: true
         env:
           <<: *global_env
           TILLER_NAMESPACE: '%(prop:testNamespace)s'

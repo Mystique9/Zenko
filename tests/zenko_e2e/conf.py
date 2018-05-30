@@ -12,12 +12,12 @@ SERVICEACCOUNT_PATH = '/var/run/secrets/kubernetes.io/serviceaccount'
 
 K8S_NAMESPACE = os.getenv('ZENKO_K8S_NAMESPACE', None)
 if K8S_NAMESPACE is None:
-    try:
-        with open(os.path.join(SERVICEACCOUNT_PATH, 'namespace'), 'r') as nsfd:
-            K8S_NAMESPACE = nsfd.read()
-    except IOError:
-        K8S_NAMESPACE = None
-        raise RuntimeError('Unable to determine Zenko K8s namespace')
+	try:
+		with open(os.path.join(SERVICEACCOUNT_PATH, 'namespace'), 'r') as nsfd:
+			K8S_NAMESPACE = nsfd.read()
+	except IOError:
+		K8S_NAMESPACE = None
+		raise RuntimeError('Unable to determine Zenko K8s namespace')
 
 
 ZENKO_HELM_RELEASE = os.getenv('ZENKO_HELM_RELEASE', None)
@@ -36,17 +36,17 @@ ZENKO_DO_ENDPOINT = get_env('ZENKO_DO_ENDPOINT', 'http://do.%s'%ZENKO_ROOT_ENDPO
 # Setup endpoints in hosts file
 
 try:
-    orbit_ip = socket.gethostbyname(ORBIT_ENDPOINT.split('//')[1].split(':')[0])
-    with open('/etc/hosts', 'a') as hosts:
-        hosts.write('%s\t%s'%(orbit_ip, ' '.join([
-            ZENKO_AWS_ENDPOINT,
-            ZENKO_AZURE_ENDPOINT,
-            ZENKO_DO_ENDPOINT,
-            ZENKO_GCP_ENDPOINT,
-            ZENKO_WASABI_ENDPOINT
-        ])))
+	orbit_ip = socket.gethostbyname(ORBIT_ENDPOINT.split('//')[1].split(':')[0])
+	with open('/etc/hosts', 'a') as hosts:
+		hosts.write('%s\t%s'%(orbit_ip, ' '.join([
+			ZENKO_AWS_ENDPOINT,
+			ZENKO_AZURE_ENDPOINT,
+			ZENKO_DO_ENDPOINT,
+			ZENKO_GCP_ENDPOINT,
+			ZENKO_WASABI_ENDPOINT
+		])))
 except socket.gaierror as exc:
-    raise RuntimeError('Unable to resolve Orbit management endpoint')
+	raise RuntimeError('Unable to resolve Orbit management endpoint')
 
 
 
@@ -121,15 +121,18 @@ AZURE_SECRET_KEY = get_env('AZURE_BACKEND_ACCESS_KEY', error = True)
 ZENKO_ACCESS_KEY = get_env('ZENKO_ACCESS_KEY')
 ZENKO_SECRET_KEY = get_env('ZENKO_SECRET_KEY')
 if ZENKO_ACCESS_KEY is None and ZENKO_SECRET_KEY is None:
-    creds_ep = ORBIT_ENDPOINT + '/api/v1/instance/uuid/account-credentials'
-    resp = requests.get(creds_ep)
-    if resp.status_code == 200:
-        ZENKO_ACCESS_KEY = resp.json().get('accessKey', None)
-        ZENKO_SECRET_KEY = resp.json().get('secretKey', None)
-        if ZENKO_ACCESS_KEY is None and ZENKO_SECRET_KEY is None:
-            raise RuntimeError('Unable to retrieve credentials from orbit!')
-    else:
-        raise RuntimeError('Unable to retrieve credentials from orbit!')
+	creds_ep = ORBIT_ENDPOINT + '/api/v1/instance/uuid/account-credentials'
+	resp = requests.get(creds_ep)
+	if resp.status_code == 200:
+		ZENKO_ACCESS_KEY = resp.json().get('accessKey', None)
+		ZENKO_SECRET_KEY = resp.json().get('secretKey', None)
+		print('+'*50)
+		print(ZENKO_ACCESS_KEY, ZENKO_SECRET_KEY)
+		print('+'*50)
+		if ZENKO_ACCESS_KEY is None and ZENKO_SECRET_KEY is None:
+			raise RuntimeError('Unable to retrieve credentials from orbit!')
+	else:
+		raise RuntimeError('Unable to retrieve credentials from orbit!')
 
 # Ignore these as theyre overiding the config with 'legacy' values
 # AWS_TARGET_BUCKET = get_env('AWS_TARGET_BUCKET', 'zenko-aws-backend-test-bucket')
@@ -258,10 +261,10 @@ EXPIRY_DELTA = timedelta(minutes = 1)
 
 EXPIRY_RULE = {
   'Rules': [{
-    'Expiration': {
-      'Date': None,
-    },
-    'Status': 'Enabled',
+	'Expiration': {
+	  'Date': None,
+	},
+	'Status': 'Enabled',
 	'Filter': {
 		'Prefix': ''
 	}
