@@ -72,7 +72,9 @@ stages:
     - ShellCommandWithSecrets:
         name: Start orbit simulator
         command: >-
-          sh start_orbit_simulator.sh
+          helm upgrade ciutil --namespace %(prop:testNamespace)s
+          --install orbit-simulator/orbit-simulator
+          --wait $(./ci_env.sh simulator)
         workdir: build/eve/workers
         haltOnFailure: true
         env:
@@ -93,7 +95,7 @@ stages:
           --set prometheus.rbac.create=false
           --set zenko-queue.rbac.enabled=false
           --set redis-ha.rbac.create=false
-          "$(./ci_env.sh)"
+          "$(./ci_env.sh ci)"
         haltOnFailure: true
         workdir: build/eve/workers
         env:

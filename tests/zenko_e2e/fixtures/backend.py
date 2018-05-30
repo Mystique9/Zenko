@@ -20,13 +20,7 @@ def vault():
 
 @pytest.fixture(scope = 'session')
 def s3auth():
-	c = configparser.ConfigParser()
-	p = os.path.expanduser('~/.aws/credentials')
-	c.read(p)
-	print(c.sections)
-	key = c['zenko']['aws_access_key_id']
-	secret = c['zenko']['aws_secret_access_key']
-	return S3Auth(key, secret)
+	return S3Auth(conf.ZENKO_ACCESS_KEY, conf.ZENKO_SECRET_KEY)
 
 @pytest.fixture(scope = 'session')
 def aws_resource():
@@ -58,30 +52,36 @@ def digital_ocean_resource():
 
 @pytest.fixture(scope = 'session')
 def zenko_resource():
-	s = Session(profile_name='zenko')
+	s =  Session(aws_access_key_id = conf.ZENKO_ACCESS_KEY,
+                aws_secret_access_key = conf.ZENKO_SECRET_KEY)
 	return s.resource('s3', endpoint_url = conf.ZENKO_ENDPOINT, verify = conf.VERIFY_CERTIFICATES)
 
 @pytest.fixture(scope = 'session')
 def aws_endpoint_resource():
-	s = Session(profile_name='zenko')
+	s =  Session(aws_access_key_id = conf.ZENKO_ACCESS_KEY,
+                aws_secret_access_key = conf.ZENKO_SECRET_KEY)
 	return s.resource('s3', endpoint_url = conf.ZENKO_AWS_ENDPOINT, verify = conf.VERIFY_CERTIFICATES)
 
 @pytest.fixture(scope = 'session')
 def gcp_endpoint_resource():
-	s = Session(profile_name='zenko')
+	s =  Session(aws_access_key_id = conf.ZENKO_ACCESS_KEY,
+                aws_secret_access_key = conf.ZENKO_SECRET_KEY)
 	return s.resource('s3', endpoint_url = conf.ZENKO_GCP_ENDPOINT, verify = conf.VERIFY_CERTIFICATES)
 
 @pytest.fixture(scope = 'session')
 def azure_endpoint_resource():
-	s = Session(profile_name='zenko')
+	s =  Session(aws_access_key_id = conf.ZENKO_ACCESS_KEY,
+                aws_secret_access_key = conf.ZENKO_SECRET_KEY)
 	return s.resource('s3', endpoint_url = conf.ZENKO_AZURE_ENDPOINT, verify = conf.VERIFY_CERTIFICATES)
 
 @pytest.fixture(scope = 'session')
 def wasabi_endpoint_resource():
-	s = Session(profile_name='zenko')
+	s =  Session(aws_access_key_id = conf.ZENKO_ACCESS_KEY,
+                aws_secret_access_key = conf.ZENKO_SECRET_KEY)
 	return s.resource('s3', endpoint_url = conf.ZENKO_WASABI_ENDPOINT, verify = conf.VERIFY_CERTIFICATES)
 
 @pytest.fixture(scope = 'session')
 def digital_ocean_endpoint_resource():
-	s = Session(profile_name='zenko')
+	s =  Session(aws_access_key_id = conf.ZENKO_ACCESS_KEY,
+                aws_secret_access_key = conf.ZENKO_SECRET_KEY)
 	return s.resource('s3', endpoint_url = conf.ZENKO_DO_ENDPOINT, verify = conf.VERIFY_CERTIFICATES)

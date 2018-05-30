@@ -120,12 +120,17 @@ AZURE_SECRET_KEY = get_env('AZURE_BACKEND_ACCESS_KEY', error = True)
 
 ZENKO_ACCESS_KEY = get_env('ZENKO_ACCESS_KEY')
 ZENKO_SECRET_KEY = get_env('ZENKO_SECRET_KEY')
-if not ZENKO_ACCESS_KEY and ZENKO_SECRET_KEY:
+if ZENKO_ACCESS_KEY is None and ZENKO_SECRET_KEY is None:
     creds_ep = ORBIT_ENDPOINT + '/api/v1/instance/uuid/account-credentials'
     resp = requests.get(creds_ep)
     if resp.status_code == 200:
         ZENKO_ACCESS_KEY = resp.json().get('accessKey', None)
         ZENKO_SECRET_KEY = resp.json().get('secretKey', None)
+        print('+'*50)
+        print(ZENKO_ACCESS_KEY, ZENKO_SECRET_KEY)
+        print('+'*50)
+        if ZENKO_ACCESS_KEY is None and ZENKO_SECRET_KEY is None:
+            raise RuntimeError('Unable to retrieve credentials from orbit!')
     else:
         raise RuntimeError('Unable to retrieve credentials from orbit!')
 

@@ -1,6 +1,7 @@
 import pytest
 import zenko_e2e.conf as conf
 import zenko_e2e.util as util
+import requests
 
 '''
 This module contains all boto3 Buckets created from the various backends or zenko itself
@@ -168,52 +169,52 @@ def digital_ocean_loc_bucket(zenko_bucket):
 
 @pytest.fixture(scope = 'function')
 def aws_crr_bucket(zenko_resource):
-    bucket = create_bucket(zenko_resource, conf.AWS_CRR_SRC_BUCKET)
-    yield bucket
-    util.cleanup_bucket(bucket, delete_bucket = False)
+	bucket = create_bucket(zenko_resource, conf.AWS_CRR_SRC_BUCKET)
+	yield bucket
+	util.cleanup_bucket(bucket, delete_bucket = False)
 
 @pytest.fixture(scope = 'function')
 def gcp_crr_bucket(zenko_resource):
-    bucket = create_bucket(zenko_resource, conf.GCP_CRR_SRC_BUCKET)
-    yield bucket
-    util.cleanup_bucket(bucket, delete_bucket = False)
+	bucket = create_bucket(zenko_resource, conf.GCP_CRR_SRC_BUCKET)
+	yield bucket
+	util.cleanup_bucket(bucket, delete_bucket = False)
 
 @pytest.fixture(scope = 'function')
 def azure_crr_bucket(zenko_resource):
-    bucket = create_bucket(zenko_resource, conf.AZURE_CRR_SRC_BUCKET)
-    yield bucket
-    util.cleanup_bucket(bucket, delete_bucket = False)
+	bucket = create_bucket(zenko_resource, conf.AZURE_CRR_SRC_BUCKET)
+	yield bucket
+	util.cleanup_bucket(bucket, delete_bucket = False)
 
 @pytest.fixture(scope = 'function')
 def wasabi_crr_bucket(zenko_resource):
-    bucket = create_bucket(zenko_resource, conf.WASABI_CRR_SRC_BUCKET)
-    yield bucket
-    util.cleanup_bucket(bucket, delete_bucket = False)
+	bucket = create_bucket(zenko_resource, conf.WASABI_CRR_SRC_BUCKET)
+	yield bucket
+	util.cleanup_bucket(bucket, delete_bucket = False)
 
 @pytest.fixture(scope = 'function')
 def digital_ocean_crr_bucket(zenko_resource):
-    bucket = create_bucket(zenko_resource, conf.DO_CRR_SRC_BUCKET)
-    yield bucket
-    util.cleanup_bucket(bucket, delete_bucket = False)
+	bucket = create_bucket(zenko_resource, conf.DO_CRR_SRC_BUCKET)
+	yield bucket
+	util.cleanup_bucket(bucket, delete_bucket = False)
 
 @pytest.fixture(scope = 'function')
 def muti_crr_bucket(zenko_resource):
-    bucket = create_bucket(zenko_resource, conf.MULTI_CRR_SRC_BUCKET)
-    yield bucket
-    util.cleanup_bucket(bucket, delete_bucket = False)
+	bucket = create_bucket(zenko_resource, conf.MULTI_CRR_SRC_BUCKET)
+	yield bucket
+	util.cleanup_bucket(bucket, delete_bucket = False)
 
 
 	resp = requests.get(req1, auth=s3auth, verify = conf.VERIFY_CERTIFICATES)
 
 
 @pytest.fixture(scope = 'function')
-def encrypted_bucket(aws_ep_resource, s3auth):
-    name = util.gen_bucket_name()
-    ep = '%s/%s/'%(conf.ZENKO_ENDPOINT, name)
-    resp = request.put(ep, auth=s3auth, verify = conf.VERIFY_CERTIFICATES)
-    bucket = create_bucket(aws_ep_resource, name)
-    yield bucket
-    util.cleanup_bucket(bucket)
+def encrypted_bucket(aws_endpoint_resource, s3auth):
+	name = util.gen_bucket_name()
+	ep = '%s/%s/'%(conf.ZENKO_ENDPOINT, name)
+	resp = requests.put(ep, auth=s3auth, verify = conf.VERIFY_CERTIFICATES)
+	bucket = create_bucket(aws_endpoint_resource, name)
+	yield bucket
+	util.cleanup_bucket(bucket)
 
 
 
