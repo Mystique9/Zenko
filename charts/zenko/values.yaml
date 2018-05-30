@@ -21,7 +21,7 @@ ingress:
 e2e:
   image:
     repository: docker.io/zenko/zenko-e2e
-    tag: latest
+    tag: wip
     pullPolicy: Always
 
 
