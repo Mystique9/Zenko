@@ -18,6 +18,7 @@ def test_ring_storage(zenko_bucket, testfile):
 		Key = 'zenko-test'
 	)
 	assert util.check_object('zenko-test', testfile, zenko_bucket)
+
 @pytest.mark.skip(reason ='Not implemented in CI')
 def test_aws_storage(aws_ep_bucket, aws_target_bucket, testfile):
 	util.mark_test('AWS STORAGE DEFAULT EP LOCATION')
@@ -27,6 +28,7 @@ def test_aws_storage(aws_ep_bucket, aws_target_bucket, testfile):
 		Key = 'aws-test'
 	)
 	assert util.check_object('aws-test', testfile, aws_ep_bucket, aws_target_bucket)
+
 @pytest.mark.skip(reason ='Not implemented in CI')
 def test_gcp_storage(gcp_ep_bucket, gcp_target_bucket, testfile):
 	util.mark_test('GCP STORAGE DEFAULT EP LOCATION')

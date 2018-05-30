@@ -170,36 +170,42 @@ def digital_ocean_loc_bucket(zenko_bucket):
 @pytest.fixture(scope = 'function')
 def aws_crr_bucket(zenko_resource):
 	bucket = create_bucket(zenko_resource, conf.AWS_CRR_SRC_BUCKET)
+    bucket.create()
 	yield bucket
 	util.cleanup_bucket(bucket, delete_bucket = False)
 
 @pytest.fixture(scope = 'function')
 def gcp_crr_bucket(zenko_resource):
 	bucket = create_bucket(zenko_resource, conf.GCP_CRR_SRC_BUCKET)
+    bucket.create()
 	yield bucket
 	util.cleanup_bucket(bucket, delete_bucket = False)
 
 @pytest.fixture(scope = 'function')
 def azure_crr_bucket(zenko_resource):
 	bucket = create_bucket(zenko_resource, conf.AZURE_CRR_SRC_BUCKET)
+    bucket.create()
 	yield bucket
 	util.cleanup_bucket(bucket, delete_bucket = False)
 
 @pytest.fixture(scope = 'function')
 def wasabi_crr_bucket(zenko_resource):
 	bucket = create_bucket(zenko_resource, conf.WASABI_CRR_SRC_BUCKET)
+    bucket.create()
 	yield bucket
 	util.cleanup_bucket(bucket, delete_bucket = False)
 
 @pytest.fixture(scope = 'function')
 def digital_ocean_crr_bucket(zenko_resource):
 	bucket = create_bucket(zenko_resource, conf.DO_CRR_SRC_BUCKET)
+    bucket.create()
 	yield bucket
 	util.cleanup_bucket(bucket, delete_bucket = False)
 
 @pytest.fixture(scope = 'function')
 def muti_crr_bucket(zenko_resource):
 	bucket = create_bucket(zenko_resource, conf.MULTI_CRR_SRC_BUCKET)
+    bucket.create()
 	yield bucket
 	util.cleanup_bucket(bucket, delete_bucket = False)
 

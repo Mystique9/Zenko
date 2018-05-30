@@ -13,7 +13,7 @@ def test_prometheus_healthy(prometheus_client):
 SERVICE = 'kubernetes-service-endpoints'
 POD = 'kubernetes-pods'
 
-
+@pytest.mark.skip(reason ='Not implemented in CI')
 @pytest.mark.nondestructive
 @pytest.mark.conformance
 @pytest.mark.parametrize('job,name', [

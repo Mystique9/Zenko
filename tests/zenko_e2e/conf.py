@@ -26,12 +26,12 @@ ZENKO_ENDPOINT = get_env('CLOUDSERVER_FRONT_ENDPOINT', 'http://%s-cloudserver-fr
 ZENKO_VAULT_ENDPOINT = get_env('ZENKO_VAULT_ENDPOINT', 'http://zenko.test:8600')
 ORBIT_ENDPOINT = get_env('ORBIT_ENDPOINT', 'http://ciutil-orbit-simulator:4222')
 
-ZENKO_ROOT_ENDPOINT = ZENKO_ENDPOINT[ZENKO_ENDPOINT.index('//') + 2:]
+ZENKO_ROOT_ENDPOINT = 'zenko.test'
 # The endpoints configured with a default location
 ZENKO_AWS_ENDPOINT = get_env('ZENKO_AWS_ENDPOINT', 'http://aws.%s'%ZENKO_ROOT_ENDPOINT)
 ZENKO_GCP_ENDPOINT = get_env('ZENKO_GCP_ENDPOINT',  'http://gcp.%s'%ZENKO_ROOT_ENDPOINT)
 ZENKO_AZURE_ENDPOINT =  get_env('ZENKO_AZURE_ENDPOINT', 'http://azure.%s'%ZENKO_ROOT_ENDPOINT)
-ZENKO_WASABI_ENDPOINT = get_env('ZRNKO_WASABI_ENDPOINT', 'http://wasabi.%s'%ZENKO_ROOT_ENDPOINT)
+ZENKO_WASABI_ENDPOINT = get_env('ZENKO_WASABI_ENDPOINT', 'http://wasabi.%s'%ZENKO_ROOT_ENDPOINT)
 ZENKO_DO_ENDPOINT = get_env('ZENKO_DO_ENDPOINT', 'http://do.%s'%ZENKO_ROOT_ENDPOINT)
 # Setup endpoints in hosts file
 
@@ -56,7 +56,7 @@ VERIFY_CERTIFICATES = get_env('VERIFY_CERTIFICATES', False)
 # When False, objects placed in cloud backends will have their origin bucket name added as prefix
 # When True, objects will be place in backend cloud buckets with their name unchanged
 #	NOTE This can result in name conflict if multiple zenko buckets target the same backennd bucket
-BUCKET_MATCH = False
+BUCKET_MATCH = True
 
 
 # The names of the backends as configured in zenko
@@ -126,9 +126,6 @@ if ZENKO_ACCESS_KEY is None and ZENKO_SECRET_KEY is None:
     if resp.status_code == 200:
         ZENKO_ACCESS_KEY = resp.json().get('accessKey', None)
         ZENKO_SECRET_KEY = resp.json().get('secretKey', None)
-        print('+'*50)
-        print(ZENKO_ACCESS_KEY, ZENKO_SECRET_KEY)
-        print('+'*50)
         if ZENKO_ACCESS_KEY is None and ZENKO_SECRET_KEY is None:
             raise RuntimeError('Unable to retrieve credentials from orbit!')
     else:
