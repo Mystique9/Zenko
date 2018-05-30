@@ -91,13 +91,12 @@ stages:
         name: Install Zenko !
         command: >-
           helm upgrade zenko-test --namespace %(prop:testNamespace)s
-          --install charts/zenko --wait
+          --install charts/zenko
           --set prometheus.rbac.create=false
           --set zenko-queue.rbac.enabled=false
           --set redis-ha.rbac.create=false
-          "$(./ci_env.sh ci)"
+          --wait $(./eve/workers/ci_env.sh ci)
         haltOnFailure: true
-        workdir: build/eve/workers
         env:
           <<: *global_env
           TILLER_NAMESPACE: '%(prop:testNamespace)s'
