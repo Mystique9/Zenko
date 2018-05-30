@@ -87,7 +87,7 @@ stages:
         haltOnFailure: true
         env:
           TILLER_NAMESPACE: '%(prop:testNamespace)s'
-    - ShellCommand:
+    - ShellCommandWithSecrets:
         name: Install Zenko !
         command: >-
           helm upgrade zenko-test --namespace %(prop:testNamespace)s
@@ -101,7 +101,7 @@ stages:
         env:
           <<: *global_env
           TILLER_NAMESPACE: '%(prop:testNamespace)s'
-    - ShellCommandWithSecrets:
+    - ShellCommand:
         name: Test zenko
         command: |-
           sleep 90
