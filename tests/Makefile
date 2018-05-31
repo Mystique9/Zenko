@@ -14,6 +14,7 @@ PYTEST_ARGS :=
 DOTENV := $(PWD)/.env
 HELM_TEST_PODS := {range .items[?(@.metadata.annotations.helm\.sh\/hook)]}{@.metadata.name}{"\n"}{end}
 DUMP_LOGS := {{range .items}}{{$$pod := .metadata.name}}{{range .spec.containers}}kubectl logs {{$$pod}} -c {{.name}} | tee {{.name}}-{{$$pod}}.log{{"\n"}}{{end}}{{end}}
+
 artifacts:
 	@mkdir -p $@
 
@@ -76,17 +77,21 @@ kubernetes-run-conformance: PYTEST_ARGS := $(PYTEST_ARGS) -m conformance
 kubernetes-run-conformance: kubernetes-run
 .PHONY: kubernetes-run-conformance
 
-test:
-	kubectl -n $(ZENKO_K8S_NAMESPACE) get pods | awk 'NR>1{print $$1}'
-
 helm-test: | artifacts
 	@helm test $(ZENKO_HELM_RELEASE) || HELM_FAIL=1;
-	@kubectl get pods -n $(ZENKO_K8S_NAMESPACE) -o go-template --template '{{range .items}}{{$$pod := .metadata.name}}{{range .spec.containers}}kubectl logs {{$$pod}} -c {{.name}} | tee {{.name}}-{{$$pod}}.log{{"\n"}}{{end}}{{end}}' | xargs -n 1 -d '\n' sh -c
+	@kubectl  -n $(ZENKO_K8S_NAMESPACE) get pods -o go-template --template '{{range .items}}{{$$pod := .metadata.name}}{{range .spec.containers}}"kubectl logs {{$$pod}} -c {{.name}} | tee artifacts/{{.name}}-{{$$pod}}.log"{{"\n"}}{{end}}{{end}}' | xargs -n 1 -r sh -c
 	@(kubectl -n $(ZENKO_K8S_NAMESPACE) get pods -o jsonpath='$(HELM_TEST_PODS)') | \
 	while read -r pod; do \
 	  kubectl -n $(ZENKO_K8S_NAMESPACE) delete pod $${pod}; \
 	done; \
 	exit $${HELM_FAIL}
+
+dumps-logs:
+
+cleanup:
+
+run-all: | helm-test dump-logs cleanup
+
 
 	#   echo "$${pod} Logs:"; echo; \
 	#   kubectl -n $(ZENKO_K8S_NAMESPACE) logs $${pod} | tee artifacts/$${pod}.log;
