@@ -1,6 +1,6 @@
 -include local.make
 DOCKER_IMAGE_NAME := docker.io/zenko/zenko-e2e
-DOCKER_IMAGE_TAG := latest
+DOCKER_IMAGE_TAG := wip
 
 DOCKER := docker
 TOX := tox
@@ -82,10 +82,12 @@ helm-test: | artifacts
 	@(kubectl -n $(ZENKO_K8S_NAMESPACE) get pods -o jsonpath='$(HELM_TEST_PODS)') | \
 	while read -r pod; do \
 	  echo "$${pod} Logs:"; echo; \
-	  kubectl -n $(ZENKO_K8S_NAMESPACE) logs $${pod} | tee artifacts/$${pod}.log;
+	  kubectl -n $(ZENKO_K8S_NAMESPACE) logs $${pod} | tee artifacts/$${pod}.log; \
 	  kubectl -n $(ZENKO_K8S_NAMESPACE) delete pod $${pod}; \
 	done; \
 	exit $${HELM_FAIL}
+
+run-local: | zenko-run helm-test
 
 lint:
 	@$(TOX)
