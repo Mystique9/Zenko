@@ -95,12 +95,12 @@ stages:
           --set prometheus.rbac.create=false
           --set zenko-queue.rbac.enabled=false
           --set redis-ha.rbac.create=false
+          --timeout 600
           --wait $(./eve/workers/ci_env.sh ci)
         haltOnFailure: true
         env:
           <<: *global_env
           TILLER_NAMESPACE: '%(prop:testNamespace)s'
-        timeout: 600
     - ShellCommand:
         name: Test zenko
         command: |-
