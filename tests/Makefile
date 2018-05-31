@@ -1,5 +1,6 @@
+-include local.make
 DOCKER_IMAGE_NAME := docker.io/zenko/zenko-e2e
-DOCKER_IMAGE_TAG := wip
+DOCKER_IMAGE_TAG := latest
 
 DOCKER := docker
 TOX := tox
@@ -77,17 +78,23 @@ kubernetes-run-conformance: kubernetes-run
 .PHONY: kubernetes-run-conformance
 
 helm-test: | artifacts
-	@helm test $(ZENKO_HELM_RELEASE) || HELM_FAIL=1;
+	@helm test $(ZENKO_HELM_RELEASE) || HELM_FAIL=1; \
+	@kubectl  -n $(ZENKO_K8S_NAMESPACE) get pods -o go-template --template '{{range .items}}{{$$pod := .metadata.name}}{{range .spec.containers}}"kubectl logs {{$$pod}} -c {{.name}} | tee artifacts/{{.name}}-{{$$pod}}.log"{{"\n"}}{{end}}{{end}}' | xargs -n 1 -r sh -c;  \
 	@(kubectl -n $(ZENKO_K8S_NAMESPACE) get pods -o jsonpath='$(HELM_TEST_PODS)') | \
 	while read -r pod; do \
-	  echo "$${pod} Logs:"; echo; \
-	  kubectl -n $(ZENKO_K8S_NAMESPACE) logs $${pod} | tee artifacts/$${pod}.log; \
 	  kubectl -n $(ZENKO_K8S_NAMESPACE) delete pod $${pod}; \
 	done; \
 	exit $${HELM_FAIL}
 
-run-local: | zenko-run helm-test
+dumps-logs:
 
+cleanup:
+
+run-all: | helm-test dump-logs cleanup
+
+
+	#   echo "$${pod} Logs:"; echo; \
+	#   kubectl -n $(ZENKO_K8S_NAMESPACE) logs $${pod} | tee artifacts/$${pod}.log;
 lint:
 	@$(TOX)
 .PHONY: lint
