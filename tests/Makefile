@@ -1,4 +1,3 @@
--include local.make
 DOCKER_IMAGE_NAME := docker.io/zenko/zenko-e2e
 DOCKER_IMAGE_TAG := wip
 
