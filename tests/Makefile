@@ -89,7 +89,7 @@ helm-test: | artifacts
 	exit $${HELM_FAIL}
 
 	#   echo "$${pod} Logs:"; echo; \
-	#   kubectl -n $(ZENKO_K8S_NAMESPACE) logs $${pod} | tee artifacts/$${pod}.log; \
+	#   kubectl -n $(ZENKO_K8S_NAMESPACE) logs $${pod} | tee artifacts/$${pod}.log;
 lint:
 	@$(TOX)
 .PHONY: lint
