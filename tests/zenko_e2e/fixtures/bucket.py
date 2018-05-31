@@ -2,12 +2,21 @@ import pytest
 import zenko_e2e.conf as conf
 import zenko_e2e.util as util
 import requests
+import re
+import warnings
 
 '''
 This module contains all boto3 Buckets created from the various backends or zenko itself
 '''
 
+bucket_name_format = re.compile(r'^[a-zA-Z0-9.\-_]{1,255}$')
+
 def create_bucket(resource, name):
+    if '"' in name:
+        name = name.replace('"', '')
+        warnings.warn('`"` found in bucket name! silently stripping')
+    if bucket_name_format.fullmatch(name) is None:
+        raise RuntimeError('%s is an invalid bucket name!')
 	return resource.Bucket(name)
 
 # These are buckets from the actual cloud backend
@@ -76,7 +85,6 @@ def digital_crr_ocean_bucket(digital_ocean_resource):
 @pytest.fixture(scope = 'function')
 def zenko_bucket(zenko_resource):
 	name = util.gen_bucket_name()
-	name.replace('"', '')
 	bucket = create_bucket(zenko_resource, name)
 	yield bucket
 	util.cleanup_bucket(bucket)

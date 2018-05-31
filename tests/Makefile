@@ -79,7 +79,7 @@ kubernetes-run-conformance: kubernetes-run
 
 helm-test: | artifacts
 	@helm test $(ZENKO_HELM_RELEASE) || HELM_FAIL=1; \
-	@kubectl  -n $(ZENKO_K8S_NAMESPACE) get pods -o go-template --template '{{range .items}}{{$$pod := .metadata.name}}{{range .spec.containers}}"kubectl logs {{$$pod}} -c {{.name}} | tee artifacts/{{.name}}-{{$$pod}}.log"{{"\n"}}{{end}}{{end}}' | xargs -n 1 -r sh -c;  \
+	@(kubectl  -n $(ZENKO_K8S_NAMESPACE) get pods -o go-template --template '{{range .items}}{{$$pod := .metadata.name}}{{range .spec.containers}}"kubectl logs {{$$pod}} -c {{.name}} | tee artifacts/{{.name}}-{{$$pod}}.log"{{"\n"}}{{end}}{{end}}') | xargs -n 1 -r sh -c;  \
 	@(kubectl -n $(ZENKO_K8S_NAMESPACE) get pods -o jsonpath='$(HELM_TEST_PODS)') | \
 	while read -r pod; do \
 	  kubectl -n $(ZENKO_K8S_NAMESPACE) delete pod $${pod}; \
