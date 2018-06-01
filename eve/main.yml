@@ -47,6 +47,9 @@ stages:
         namespaces:
         - "testNamespace"    # <<< the default namespace for that stage
     steps:
+    - ShellCommand:
+        name: Install curl
+        command: apk --update add curl
     - Git: &git_pull
         name: git pull
         repourl: "%(prop:git_reference)s"
